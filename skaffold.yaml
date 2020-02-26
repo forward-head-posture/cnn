@@ -1,0 +1,14 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: yoyota/forward-head-posture-cnn
+deploy:
+  helm:
+    releases:
+      - name: forward-head-posture-cnn
+        namespace: yoyota
+        chartPath: helm
+        setValueTemplates:
+          image.repository: "{{.IMAGE_NAME}}"
+          image.tag: "{{.DIGEST_HEX}}"

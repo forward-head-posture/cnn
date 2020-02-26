@@ -1,0 +1,21 @@
+name: "test"
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    container: tensorflow/tensorflow:2.1.0-py3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('setup.py') }}
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.6"
+      - run: pip install -e ".[test]"
+      - run: pylint cnn tests setup.py
+      - run: pytest
