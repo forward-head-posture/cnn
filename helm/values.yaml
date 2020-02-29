@@ -2,10 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-schedule: "* 14 * * *"
-
-restartPolicy: OnFailure
-
 image:
   repository: alpine
   tag: latest
@@ -33,13 +29,9 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 1000
 
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources: 
+  limits:
+    nvidia.com/gpu: "1"
 
 nodeSelector: {}
 
@@ -54,3 +46,28 @@ env: []
 envFrom: 
   - secretRef:
       name: storage-credential
+
+objective:
+  type: minimize
+  goal: 0.000000000001
+  objectiveMetricName: val_loss
+  additionalMetricNames:
+    - loss
+
+parameters:
+  - feasibleSpace:
+      max: "0.99"
+      min: "0.01"
+    name: --decay_rate
+    parameterType: double
+  - feasibleSpace:
+      max: "0.0009"
+      min: "0.00001"
+    name: --learning_rate
+    parameterType: double
+  - feasibleSpace:
+      list:
+      - InceptionV3
+      - InceptionResNetV2
+    name: --model_name
+    parameterType: categorical

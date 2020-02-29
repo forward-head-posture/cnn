@@ -53,7 +53,7 @@ def main(
     learning_rate=0.0001,
     decay_rate=0.7,
     decay_steps=100,
-    model_dir="/tmp/keras_ckpt",
+    model_dir="s3://model-dir/forward-head-posture",
     model_name="InceptionV3",
     optimizer_name="rmsprop",
 ):

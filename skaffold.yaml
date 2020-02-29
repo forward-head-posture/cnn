@@ -2,12 +2,12 @@ apiVersion: skaffold/v1
 kind: Config
 build:
   artifacts:
-    - image: yoyota/forward-head-posture-cnn
+    - image: registry.dudaji.org/yoyota/forward-head-posture-cnn
 deploy:
   helm:
     releases:
       - name: forward-head-posture-cnn
-        namespace: yoyota
+        namespace: kubeflow
         chartPath: helm
         setValueTemplates:
           image.repository: "{{.IMAGE_NAME}}"

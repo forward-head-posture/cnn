@@ -1,0 +1,74 @@
+apiVersion: kubeflow.org/v1alpha3
+kind: Experiment
+metadata:
+  name: {{ printf "%s-%s" (include "cnn.fullname" .) (randNumeric 6) }}
+  namespace: kubeflow
+  labels:
+    {{- include "cnn.labels" . | nindent 4 }}
+    controller-tools.k8s.io: "1.0"
+spec:
+  objective:
+    {{- toYaml .Values.objective | nindent 4 }}
+  parameters:
+    {{- toYaml .Values.parameters | nindent 4 }}
+  algorithm:
+    algorithmName: random
+  maxFailedTrialCount: 3
+  maxTrialCount: 4
+  parallelTrialCount: 2
+  trialTemplate:
+    goTemplate:
+      rawTemplate: |-
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ `{{.Trial}}` }}
+          namespace: {{ `{{.NameSpace}}` }}
+        spec:
+          template:
+            spec:
+              restartPolicy: Never
+            {{- with .Values.imagePullSecrets }}
+              imagePullSecrets:
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
+              serviceAccountName: {{ include "cnn.serviceAccountName" . }}
+              securityContext:
+                {{- toYaml .Values.podSecurityContext | nindent 16 }}
+              {{- with .Values.nodeSelector }}
+              nodeSelector:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{- with .Values.affinity }}
+              affinity:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              {{- with .Values.tolerations }}
+              tolerations:
+                {{- toYaml . | nindent 16 }}
+              {{- end }}
+              containers:
+                - name: {{ `{{.Trial}}` }}
+                  securityContext:
+                    {{- toYaml .Values.securityContext | nindent 20 }}
+                  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+                  imagePullPolicy: {{ .Values.image.pullPolicy }}
+                  {{- with .Values.env }}
+                  env:
+                    {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  {{- with .Values.envFrom }}
+                  envFrom:
+                    {{- toYaml . | nindent 20 }}
+                  {{- end }}
+                  resources:
+                    {{- toYaml .Values.resources | nindent 20 }}
+                  args:
+                    {{- with .Values.args }}
+                      {{- toYaml . | nindent 20 }}
+                    {{- end }}
+                    {{ `{{- with .HyperParameters}}` }}
+                    {{ `{{- range .}}` }}
+                    - {{ `"{{.Name}}={{.Value}}"` }}
+                    {{ `{{- end}}` }}
+                    {{ `{{- end}}` }}
