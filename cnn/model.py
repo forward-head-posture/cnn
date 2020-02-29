@@ -1,3 +1,5 @@
+# pylint: disable=import-error
+
 from tensorflow.keras.applications import (
     InceptionResNetV2,
     Xception,

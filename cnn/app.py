@@ -16,8 +16,7 @@ def get_optimizer(name, learning_rate, decay_steps, decay_rate):
         return tf.keras.optimizers.Adam(learning_rate=lr_schedule)
     if name == "rmsprop":
         return tf.keras.optimizers.RMSprop(learning_rate=lr_schedule)
-    else:
-        return tf.keras.optimizers.SGD(learning_rate=lr_schedule)
+    return tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
 
 def _model(model_name, optimizer):
@@ -47,6 +46,7 @@ def run_keras(model, model_dir, get_input_fn):
     )
 
 
+# pylint: disable=too-many-arguments
 def main(
     data_dir="s3://tfrecord/forward-head-posture",
     batch_size=32,

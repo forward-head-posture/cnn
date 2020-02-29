@@ -1,18 +1,12 @@
-import numpy as np
-import os
+# pylint: disable=dangerous-default-value,no-self-use
+
 import tensorflow as tf
-from threading import Thread
-from tensorflow.keras.callbacks import Callback
 
 
-def str_trim(params):
-    return str(params).strip()
-
-
-class Logging(Callback):
+class Logging(tf.keras.callbacks.Callback):
     def print_log(self, logs):
         for k, v in logs.items():
-            v = str_trim(v)
+            v = str(v).strip()
             print("{}={}".format(k, v))
 
     def on_batch_end(self, batch, logs={}):
