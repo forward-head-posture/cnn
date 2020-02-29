@@ -39,7 +39,9 @@ tolerations: []
 
 affinity: {}
 
-args: []
+args:
+  - --batch_size=48
+
 
 env: []
 
@@ -61,13 +63,19 @@ parameters:
     name: --decay_rate
     parameterType: double
   - feasibleSpace:
-      max: "0.0009"
-      min: "0.00001"
+      max: "0.09"
+      min: "0.0000001"
     name: --learning_rate
     parameterType: double
   - feasibleSpace:
       list:
-      - InceptionV3
-      - InceptionResNetV2
+      - rmsprop
+      - adam
     name: --model_name
     parameterType: categorical
+  # - feasibleSpace:
+  #     list:
+  #     - InceptionV3
+  #     - InceptionResNetV2
+  #   name: --model_name
+  #   parameterType: categorical

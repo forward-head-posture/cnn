@@ -1,3 +1,4 @@
+import os
 import fire
 import tensorflow as tf
 from cnn.input_pipeline import input_fn
@@ -29,12 +30,10 @@ def _model(model_name, optimizer):
     return model
 
 
-def run_keras(model, model_dir, get_input_fn):
-    # steps_per_epoch = NUM_TRAIN_IMAGE // FLAGS.batch_size + 1
-    # validation_steps = NUM_EVAL_IMAGE // FLAGS.batch_size + 1
-    epochs = 1
-    steps_per_epoch = 1
-    validation_steps = 1
+# pylint: disable=too-many-arguments
+def run_keras(
+    model, model_dir, get_input_fn, steps_per_epoch, validation_steps, epochs=1
+):
     model.fit(
         get_input_fn(True)(),
         epochs=epochs,
@@ -44,6 +43,11 @@ def run_keras(model, model_dir, get_input_fn):
         validation_steps=validation_steps,
         callbacks=get_callbacks(model_dir),
     )
+
+
+def count_images(data_dir, pattern="**/*train*"):
+    glob_pattern = os.path.join(data_dir, pattern)
+    return len(tf.io.gfile.glob(glob_pattern)) * 100
 
 
 # pylint: disable=too-many-arguments
@@ -65,7 +69,10 @@ def main(
     def get_input_fn(is_training):
         return lambda: input_fn(data_dir, batch_size, is_training)
 
-    run_keras(model, model_dir, get_input_fn)
+    steps_per_epoch = count_images(data_dir, "**/*train*") // batch_size
+    validation_steps = count_images(data_dir, "**/*validation*") // batch_size
+
+    run_keras(model, model_dir, get_input_fn, steps_per_epoch, validation_steps)
 
 
 if __name__ == "__main__":

@@ -20,15 +20,21 @@ class Logging(tf.keras.callbacks.Callback):
 
 
 def get_callbacks(model_dir):
+    print(model_dir)
+    log_cb = Logging()
+    stop_cb = tf.keras.callbacks.EarlyStopping()
+    callbacks = [log_cb, stop_cb]
+    return callbacks
+    # if not model_dir:
+    #     return callbacks
+    # tb_cb = tf.keras.callbacks.TensorBoard(
+    #     log_dir=model_dir, write_graph=False, update_freq=90
+    # )
+    # callbacks.append(tb_cb)
+    # return callbacks
     # ckpt_cb = tf.keras.callbacks.ModelCheckpoint(
     #     model_dir,
     #     monitor="val_loss",
     #     save_best_only=True,
     #     save_weights_only=True,
     # )
-    tb_cb = tf.keras.callbacks.TensorBoard(
-        log_dir=model_dir, write_graph=False, update_freq=90
-    )
-    log_cb = Logging()
-    stop_cb = tf.keras.callbacks.EarlyStopping()
-    return [stop_cb, log_cb, tb_cb]

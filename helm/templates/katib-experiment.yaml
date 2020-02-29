@@ -15,7 +15,7 @@ spec:
     algorithmName: random
   maxFailedTrialCount: 3
   maxTrialCount: 4
-  parallelTrialCount: 2
+  parallelTrialCount: 4
   trialTemplate:
     goTemplate:
       rawTemplate: |-

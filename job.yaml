@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: gpu-job
+  namespace: kubeflow
+spec:
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      nodeName: dudaji-cloud4
+      containers:
+        - name: gpu-job
+          image: registry.dudaji.org/yoyota/forward-head-posture-cnn:a442659-dirty
+          envFrom:
+            - secretRef:
+                name: storage-credential
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+      restartPolicy: OnFailure
+  backoffLimit: 4
