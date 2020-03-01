@@ -68,6 +68,8 @@ parameters:
     parameterType: double
   - feasibleSpace:
       list:
-        - InceptionV3
-    name: --model_name
+        - adam
+        - rmsprop
+        - sgd
+    name: --optimizer_name
     parameterType: categorical
