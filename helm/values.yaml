@@ -50,6 +50,7 @@ objective:
   goal: 300
   objectiveMetricName: val_mean_squared_error
   additionalMetricNames:
+    - epoch
     - loss
     - val_loss
     - val_mean_absolute_error
