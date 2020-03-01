@@ -52,9 +52,22 @@ envFrom:
 objective:
   type: minimize
   goal: 0.000000000001
-  objectiveMetricName: val_loss
+  objectiveMetricName: val_mean_squared_error
   additionalMetricNames:
+    # - epoch
+    # - batch
     - loss
+    # - mean_absolute_error
+    # - mean_absolute_percentage_error
+    - mean_squared_error
+    # - mean_squared_logarithmic_error
+    # - root_mean_squared_error
+    - val_loss
+    # - val_mean_absolute_error
+    # - val_mean_absolute_percentage_error
+    # - val_mean_squared_error
+    # - val_mean_squared_logarithmic_error
+    # - val_root_mean_squared_error
 
 parameters:
   - feasibleSpace:
@@ -71,7 +84,15 @@ parameters:
       list:
       - rmsprop
       - adam
-    name: --model_name
+    name: --optimizer_name
+    parameterType: categorical
+  - feasibleSpace:
+      list:
+      - mean_squared_error
+      - mean_absolute_error
+      - mean_absolute_percentage_error
+      - mean_squared_logarithmic_error
+    name: --loss_function
     parameterType: categorical
   # - feasibleSpace:
   #     list:

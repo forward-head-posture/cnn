@@ -5,9 +5,6 @@ from cnn.input_pipeline import input_fn
 from cnn.model import get_model
 from cnn.keras_callback import get_callbacks
 
-# import os
-# from cnn.metrics import get_metrics
-
 
 def get_optimizer(name, learning_rate, decay_steps, decay_rate):
     lr_schedule = tf.keras.optimizers.schedules.InverseTimeDecay(
@@ -20,24 +17,30 @@ def get_optimizer(name, learning_rate, decay_steps, decay_rate):
     return tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
 
-def _model(model_name, optimizer):
+def _model(model_name, optimizer, loss_function="mean_squared_error"):
     model = get_model(model_name)
     model.compile(
         optimizer=optimizer,
-        loss="mean_squared_error",
-        # metrics=get_metrics(),
+        loss=loss_function,
+        metrics=[
+            tf.keras.metrics.MeanAbsoluteError(),
+            tf.keras.metrics.MeanAbsolutePercentageError(),
+            tf.keras.metrics.MeanSquaredError(),
+            tf.keras.metrics.MeanSquaredLogarithmicError(),
+            tf.keras.metrics.RootMeanSquaredError(),
+        ],
     )
     return model
 
 
 # pylint: disable=too-many-arguments
 def run_keras(
-    model, model_dir, get_input_fn, steps_per_epoch, validation_steps, epochs=1
+    epochs, get_input_fn, model, model_dir, steps_per_epoch, validation_steps
 ):
     model.fit(
         get_input_fn(True)(),
         epochs=epochs,
-        verbose=2,
+        verbose=0,
         steps_per_epoch=steps_per_epoch,
         validation_data=get_input_fn(False)(),
         validation_steps=validation_steps,
@@ -52,11 +55,13 @@ def count_images(data_dir, pattern="**/*train*"):
 
 # pylint: disable=too-many-arguments
 def main(
-    data_dir="s3://tfrecord/forward-head-posture",
     batch_size=32,
-    learning_rate=0.0001,
+    data_dir="s3://tfrecord/forward-head-posture",
     decay_rate=0.7,
     decay_steps=100,
+    epochs=5,
+    learning_rate=0.0001,
+    loss_function="mean_squared_error",
     model_dir="s3://model-dir/forward-head-posture",
     model_name="InceptionV3",
     optimizer_name="rmsprop",
@@ -64,7 +69,7 @@ def main(
     optimizer = get_optimizer(
         optimizer_name, learning_rate, decay_steps, decay_rate
     )
-    model = _model(model_name, optimizer)
+    model = _model(model_name, optimizer, loss_function)
 
     def get_input_fn(is_training):
         return lambda: input_fn(data_dir, batch_size, is_training)
@@ -72,7 +77,14 @@ def main(
     steps_per_epoch = count_images(data_dir, "**/*train*") // batch_size
     validation_steps = count_images(data_dir, "**/*validation*") // batch_size
 
-    run_keras(model, model_dir, get_input_fn, steps_per_epoch, validation_steps)
+    run_keras(
+        epochs=epochs,
+        get_input_fn=get_input_fn,
+        model=model,
+        model_dir=model_dir,
+        steps_per_epoch=steps_per_epoch,
+        validation_steps=validation_steps,
+    )
 
 
 if __name__ == "__main__":

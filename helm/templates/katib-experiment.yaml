@@ -13,8 +13,8 @@ spec:
     {{- toYaml .Values.parameters | nindent 4 }}
   algorithm:
     algorithmName: random
-  maxFailedTrialCount: 3
-  maxTrialCount: 4
+  maxFailedTrialCount: 9999
+  maxTrialCount: 9999
   parallelTrialCount: 4
   trialTemplate:
     goTemplate:

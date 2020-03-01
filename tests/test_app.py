@@ -30,7 +30,7 @@ def test_main_with_mock(mocker):
     ]
     batch_size = 13
     main(batch_size=batch_size)
-    assert cnn.app.run_keras.call_args[0][3] == num_train_images // batch_size
-    assert (
-        cnn.app.run_keras.call_args[0][4] == num_validation_images // batch_size
-    )
+    kwargs = cnn.app.run_keras.call_args[1]
+
+    assert kwargs["steps_per_epoch"] == num_train_images // batch_size
+    assert kwargs["validation_steps"] == num_validation_images // batch_size

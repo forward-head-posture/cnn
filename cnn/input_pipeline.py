@@ -34,7 +34,7 @@ def input_fn(data_dir, batch_size, is_training=True, crop=True):
         features = get_features(serialized)
         image = tf.image.decode_jpeg(features["image/encoded"], 3)
         image = preprocess_image(image, 299, 299, is_training, crop_image=crop)
-        distance = features["image/distance"]
+        distance = features["image/distance"] * 1000
         return image, distance
 
     dataset = dataset.map(dataset_parser, num_parallel_calls=2)
