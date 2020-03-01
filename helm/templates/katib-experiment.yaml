@@ -55,7 +55,7 @@ spec:
               containers:
                 - name: {{ `{{.Trial}}` }}
                   volumeMounts:
-                    - mountPath: /root/.keras
+                    - mountPath: /tmp/.keras
                       name: keras-cache
                   securityContext:
                     {{- toYaml .Values.securityContext | nindent 20 }}
