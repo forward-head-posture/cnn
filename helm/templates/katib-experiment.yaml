@@ -47,8 +47,16 @@ spec:
               tolerations:
                 {{- toYaml . | nindent 16 }}
               {{- end }}
+              volumes:
+                - name: keras-cache
+                  hostPath:
+                    path: /tmp
+                    type: Directory
               containers:
                 - name: {{ `{{.Trial}}` }}
+                  volumeMounts:
+                    - mountPath: /root/.keras
+                      name: keras-cache
                   securityContext:
                     {{- toYaml .Values.securityContext | nindent 20 }}
                   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
