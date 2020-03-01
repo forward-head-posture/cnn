@@ -16,7 +16,7 @@ class Logging(tf.keras.callbacks.Callback):
         self.print_log(logs)
 
     def on_epoch_end(self, epoch, logs={}):
-        print("epoch={}".format(epoch))
+        print("epoch={}".format(epoch * -1))
         self.print_log(logs)
 
 
