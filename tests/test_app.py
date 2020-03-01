@@ -6,8 +6,13 @@ from cnn.app import main, count_images
 
 
 @pytest.mark.skip
-def test_main():
-    main(batch_size=1, model_dir="s3://test/forward-head-posture/keras_ckpt")
+def test_main_with_one_step(mocker):
+    mocker.patch("cnn.app.count_images").return_value = 1
+    main(
+        epochs=1,
+        batch_size=1,
+        model_dir="s3://test/forward-head-posture/keras_ckpt",
+    )
 
 
 @pytest.mark.skip

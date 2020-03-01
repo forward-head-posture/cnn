@@ -39,10 +39,6 @@ tolerations: []
 
 affinity: {}
 
-args:
-  - --batch_size=48
-
-
 env: []
 
 envFrom: 
@@ -51,52 +47,26 @@ envFrom:
 
 objective:
   type: minimize
-  goal: 0.000000000001
+  goal: 300
   objectiveMetricName: val_mean_squared_error
   additionalMetricNames:
-    # - epoch
-    # - batch
     - loss
-    # - mean_absolute_error
-    # - mean_absolute_percentage_error
-    - mean_squared_error
-    # - mean_squared_logarithmic_error
-    # - root_mean_squared_error
     - val_loss
-    # - val_mean_absolute_error
-    # - val_mean_absolute_percentage_error
-    # - val_mean_squared_error
-    # - val_mean_squared_logarithmic_error
-    # - val_root_mean_squared_error
+    - val_mean_absolute_error
 
 parameters:
   - feasibleSpace:
       max: "0.99"
-      min: "0.01"
+      min: "0.9"
     name: --decay_rate
     parameterType: double
   - feasibleSpace:
-      max: "0.09"
+      max: "0.9"
       min: "0.0000001"
     name: --learning_rate
     parameterType: double
   - feasibleSpace:
       list:
-      - rmsprop
-      - adam
-    name: --optimizer_name
+        - InceptionV3
+    name: --model_name
     parameterType: categorical
-  - feasibleSpace:
-      list:
-      - mean_squared_error
-      - mean_absolute_error
-      - mean_absolute_percentage_error
-      - mean_squared_logarithmic_error
-    name: --loss_function
-    parameterType: categorical
-  # - feasibleSpace:
-  #     list:
-  #     - InceptionV3
-  #     - InceptionResNetV2
-  #   name: --model_name
-  #   parameterType: categorical

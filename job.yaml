@@ -9,8 +9,13 @@ spec:
     spec:
       nodeName: dudaji-cloud4
       containers:
-        - name: gpu-job
-          image: registry.dudaji.org/yoyota/forward-head-posture-cnn:a442659-dirty
+        - name: keras
+          image: registry.dudaji.org/yoyota/forward-head-posture-cnn:v6
+          args:
+            - --epochs=10
+            - --learning_rate=0.0228331575367195
+            - --decay_rate=0.5498275322187888
+            - --model_dir=s3://model-dir/forward-head-posture/keras-ckpt
           envFrom:
             - secretRef:
                 name: storage-credential

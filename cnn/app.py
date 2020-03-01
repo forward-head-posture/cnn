@@ -17,17 +17,16 @@ def get_optimizer(name, learning_rate, decay_steps, decay_rate):
     return tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
 
-def _model(model_name, optimizer, loss_function="mean_squared_error"):
+def get_compiled_model(
+    model_name, optimizer, loss_function="mean_squared_error"
+):
     model = get_model(model_name)
     model.compile(
         optimizer=optimizer,
         loss=loss_function,
         metrics=[
             tf.keras.metrics.MeanAbsoluteError(),
-            tf.keras.metrics.MeanAbsolutePercentageError(),
             tf.keras.metrics.MeanSquaredError(),
-            tf.keras.metrics.MeanSquaredLogarithmicError(),
-            tf.keras.metrics.RootMeanSquaredError(),
         ],
     )
     return model
@@ -35,16 +34,16 @@ def _model(model_name, optimizer, loss_function="mean_squared_error"):
 
 # pylint: disable=too-many-arguments
 def run_keras(
-    epochs, get_input_fn, model, model_dir, steps_per_epoch, validation_steps
+    callbacks, epochs, get_input_fn, model, steps_per_epoch, validation_steps
 ):
     model.fit(
         get_input_fn(True)(),
         epochs=epochs,
-        verbose=0,
+        verbose=2,
         steps_per_epoch=steps_per_epoch,
         validation_data=get_input_fn(False)(),
         validation_steps=validation_steps,
-        callbacks=get_callbacks(model_dir),
+        callbacks=callbacks,
     )
 
 
@@ -59,17 +58,18 @@ def main(
     data_dir="s3://tfrecord/forward-head-posture",
     decay_rate=0.7,
     decay_steps=100,
-    epochs=5,
+    epochs=10,
     learning_rate=0.0001,
     loss_function="mean_squared_error",
-    model_dir="s3://model-dir/forward-head-posture",
+    model_dir=None,
     model_name="InceptionV3",
-    optimizer_name="rmsprop",
+    optimizer_name="adam",
 ):
     optimizer = get_optimizer(
         optimizer_name, learning_rate, decay_steps, decay_rate
     )
-    model = _model(model_name, optimizer, loss_function)
+    model = get_compiled_model(model_name, optimizer, loss_function)
+    callbacks = get_callbacks(model_dir)
 
     def get_input_fn(is_training):
         return lambda: input_fn(data_dir, batch_size, is_training)
@@ -78,10 +78,10 @@ def main(
     validation_steps = count_images(data_dir, "**/*validation*") // batch_size
 
     run_keras(
+        callbacks=callbacks,
         epochs=epochs,
         get_input_fn=get_input_fn,
         model=model,
-        model_dir=model_dir,
         steps_per_epoch=steps_per_epoch,
         validation_steps=validation_steps,
     )
