@@ -5,13 +5,13 @@ import cnn
 from cnn.app import main, count_images
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_main_with_one_step(mocker):
     mocker.patch("cnn.app.count_images").return_value = 1
     main(
         epochs=1,
         batch_size=1,
-        model_dir="s3://test/forward-head-posture/keras_ckpt",
+        # model_dir="s3://test/forward-head-posture/keras_ckpt",
     )
 
 

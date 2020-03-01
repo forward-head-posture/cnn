@@ -12,7 +12,7 @@ def get_features(serialized):
     return features
 
 
-def input_fn(data_dir, batch_size, is_training=True, crop=True):
+def input_fn(data_dir, batch_size, is_training=True):
     file_pattern = os.path.join(
         data_dir, "**/train-*" if is_training else "**/validation-*"
     )
@@ -33,7 +33,7 @@ def input_fn(data_dir, batch_size, is_training=True, crop=True):
     def dataset_parser(serialized):
         features = get_features(serialized)
         image = tf.image.decode_jpeg(features["image/encoded"], 3)
-        image = preprocess_image(image, 299, 299, is_training, crop_image=crop)
+        image = preprocess_image(image, 224, 224, is_training)
         distance = features["image/distance"] * 1000
         return image, distance
 

@@ -17,10 +17,7 @@ def get_optimizer(name, learning_rate, decay_steps, decay_rate):
     return tf.keras.optimizers.SGD(learning_rate=lr_schedule)
 
 
-def get_compiled_model(
-    model_name, optimizer, loss_function="mean_squared_error"
-):
-    model = get_model(model_name)
+def compile_model(model, optimizer, loss_function="mean_squared_error"):
     model.compile(
         optimizer=optimizer,
         loss=loss_function,
@@ -29,7 +26,6 @@ def get_compiled_model(
             tf.keras.metrics.MeanSquaredError(),
         ],
     )
-    return model
 
 
 # pylint: disable=too-many-arguments
@@ -62,13 +58,14 @@ def main(
     learning_rate=0.0001,
     loss_function="mean_squared_error",
     model_dir=None,
-    model_name="InceptionV3",
+    model_name="MobileNet",
     optimizer_name="adam",
 ):
     optimizer = get_optimizer(
         optimizer_name, learning_rate, decay_steps, decay_rate
     )
-    model = get_compiled_model(model_name, optimizer, loss_function)
+    model = get_model(model_name)
+    compile_model(model, optimizer, loss_function)
     callbacks = get_callbacks(model_dir)
 
     def get_input_fn(is_training):
@@ -77,6 +74,7 @@ def main(
     steps_per_epoch = count_images(data_dir, "**/*train*") // batch_size
     validation_steps = count_images(data_dir, "**/*validation*") // batch_size
 
+    print(model)
     run_keras(
         callbacks=callbacks,
         epochs=epochs,
