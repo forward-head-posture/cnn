@@ -22,8 +22,9 @@ class Logging(tf.keras.callbacks.Callback):
 
 def get_callbacks(model_dir):
     log_cb = Logging()
-    stop_cb = tf.keras.callbacks.EarlyStopping()
-    callbacks = [log_cb, stop_cb]
+    stop_cb = tf.keras.callbacks.EarlyStopping(min_delta=5, baseline=500)
+    nan_cb = tf.keras.callbacks.TerminateOnNaN()
+    callbacks = [log_cb, stop_cb, nan_cb]
     if not model_dir:
         return callbacks
     hostname = os.environ.get("HOSTNAME")

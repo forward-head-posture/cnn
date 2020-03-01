@@ -58,7 +58,7 @@ objective:
 parameters:
   - feasibleSpace:
       max: "0.99"
-      min: "0.9"
+      min: "0.01"
     name: --decay_rate
     parameterType: double
   - feasibleSpace:
@@ -70,6 +70,5 @@ parameters:
       list:
         - adam
         - rmsprop
-        - sgd
     name: --optimizer_name
     parameterType: categorical
