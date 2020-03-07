@@ -22,7 +22,9 @@ class Logging(tf.keras.callbacks.Callback):
 
 def get_callbacks(model_dir):
     log_cb = Logging()
-    stop_cb = tf.keras.callbacks.EarlyStopping(min_delta=1, baseline=1000)
+    stop_cb = tf.keras.callbacks.EarlyStopping(
+        min_delta=1, baseline=1000, patience=10
+    )
     nan_cb = tf.keras.callbacks.TerminateOnNaN()
     callbacks = [log_cb, stop_cb, nan_cb]
     if not model_dir:

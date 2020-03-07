@@ -50,11 +50,11 @@ def count_images(data_dir, pattern="**/*train*"):
 
 # pylint: disable=too-many-arguments
 def main(
-    batch_size=200,
+    batch_size=150,
     data_dir="s3://tfrecord/forward-head-posture",
     decay_rate=0.7,
     decay_steps=100,
-    epochs=10,
+    epochs=100,
     learning_rate=0.0001,
     model_dir=None,
     model_name="MobileNet",
