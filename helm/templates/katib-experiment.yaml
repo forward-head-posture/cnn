@@ -15,7 +15,7 @@ spec:
     algorithmName: random
   maxFailedTrialCount: 9999
   maxTrialCount: 9999
-  parallelTrialCount: 4
+  parallelTrialCount: {{ .Values.parallelTrialCount }}
   trialTemplate:
     goTemplate:
       rawTemplate: |-

@@ -7,14 +7,23 @@ spec:
   ttlSecondsAfterFinished: 10
   template:
     spec:
-      nodeName: dudaji-cloud4
+      # nodeName: dudaji-cloud4
+      volumes:
+        - name: keras-cache
+          hostPath:
+            path: /tmp
+            type: Directory
       containers:
-        - name: keras
-          image: registry.dudaji.org/yoyota/forward-head-posture-cnn:v6
+        - name: gpu-job
+          volumeMounts:
+            - mountPath: /tmp/.keras
+              name: keras-cache
+          image: registry.dudaji.org/yoyota/forward-head-posture-cnn:86d3deb-dirty@sha256:eff0298bbceead83c24ecb71561fed5af818afca9499a3259dbf50aef1eb2d31
           args:
             - --epochs=10
-            - --learning_rate=0.0228331575367195
-            - --decay_rate=0.5498275322187888
+            - --optimizer_name=adam
+            - --learning_rate=0.0007014961377582395
+            - --decay_rate=0.6299270450994972
             - --model_dir=s3://model-dir/forward-head-posture/keras-ckpt
           envFrom:
             - secretRef:
