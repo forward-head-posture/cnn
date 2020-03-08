@@ -62,7 +62,7 @@ def main(
     learning_rate=0.0001,
     loss_function="mean_squared_error",
     model_dir=None,
-    model_name="InceptionV3",
+    model_name="InceptionResNetV2",
     optimizer_name="adam",
 ):
     optimizer = get_optimizer(

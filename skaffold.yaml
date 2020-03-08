@@ -6,7 +6,7 @@ build:
 deploy:
   helm:
     releases:
-      - name: forward-head-posture-cnn-5
+      - name: forward-head-posture-cnn-inception-resnet-v2-0
         namespace: kubeflow
         chartPath: helm
         setValueTemplates:
