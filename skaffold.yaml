@@ -6,7 +6,7 @@ build:
 deploy:
   helm:
     releases:
-      - name: forward-head-posture-cnn-mobilenet-3
+      - name: forward-head-posture-cnn-mobilenet-4
         namespace: kubeflow
         chartPath: helm
         setValueTemplates:

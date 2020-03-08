@@ -63,12 +63,12 @@ objective:
 parameters:
   - feasibleSpace:
       max: "0.99"
-      min: "0.9"
+      min: "0.8"
     name: --decay_rate
     parameterType: double
   - feasibleSpace:
-      max: "0.002"
-      min: "0.0009"
+      max: "0.003"
+      min: "0.00009"
     name: --learning_rate
     parameterType: double
   - feasibleSpace:
