@@ -23,7 +23,7 @@ class Logging(tf.keras.callbacks.Callback):
 def get_callbacks(model_dir):
     log_cb = Logging()
     stop_cb = tf.keras.callbacks.EarlyStopping(
-        min_delta=1, baseline=1000, patience=10
+        min_delta=0.1, baseline=1000, patience=20
     )
     nan_cb = tf.keras.callbacks.TerminateOnNaN()
     callbacks = [log_cb, stop_cb, nan_cb]
@@ -31,12 +31,12 @@ def get_callbacks(model_dir):
         return callbacks
     hostname = os.environ.get("HOSTNAME")
     log_dir = os.path.join(model_dir, hostname)
-    tb_cb = tf.keras.callbacks.TensorBoard(
-        log_dir=log_dir, write_graph=False, update_freq=90
-    )
+    # tb_cb = tf.keras.callbacks.TensorBoard(
+    #     log_dir=log_dir, write_graph=False, update_freq=90
+    # )
     ckptpath = os.path.join(log_dir, hostname)
     ckpt_cb = tf.keras.callbacks.ModelCheckpoint(
         ckptpath, monitor="val_loss", save_best_only=True
     )
-    callbacks.extend([tb_cb, ckpt_cb])
+    callbacks.extend([ckpt_cb])
     return callbacks
