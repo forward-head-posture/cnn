@@ -18,7 +18,7 @@ def input_fn(data_dir, batch_size, is_training=True):
     )
     dataset = tf.data.Dataset.list_files(file_pattern, shuffle=is_training)
 
-    dataset = dataset.repeat(None if is_training else 1)
+    dataset = dataset.repeat(-1)
 
     def fetch_dataset(filename):
         buffer_size = 8 * 1024 * 1024  # 8 MiB per file

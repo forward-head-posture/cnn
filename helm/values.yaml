@@ -30,6 +30,9 @@ securityContext:
   runAsUser: 1000
 
 resources: 
+  requests:
+    cpu: "2000m"
+    memory: "4000Mi"
   limits:
     nvidia.com/gpu: "1"
 
@@ -63,12 +66,12 @@ objective:
 parameters:
   - feasibleSpace:
       max: "0.99"
-      min: "0.5"
+      min: "0.80"
     name: --decay_rate
     parameterType: double
   - feasibleSpace:
-      max: "0.01"
-      min: "0.000009"
+      max: "0.002"
+      min: "0.0001"
     name: --learning_rate
     parameterType: double
   - feasibleSpace:

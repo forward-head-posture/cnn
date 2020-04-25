@@ -35,7 +35,7 @@ def run_keras(
     model.fit(
         get_input_fn(True)(),
         epochs=epochs,
-        verbose=2,
+        verbose=0,
         steps_per_epoch=steps_per_epoch,
         validation_data=get_input_fn(False)(),
         validation_steps=validation_steps,
@@ -54,7 +54,7 @@ def main(
     data_dir="s3://tfrecord/forward-head-posture",
     decay_rate=0.7,
     decay_steps=100,
-    epochs=100,
+    epochs=10,
     learning_rate=0.0001,
     model_dir=None,
     model_name="MobileNet",
