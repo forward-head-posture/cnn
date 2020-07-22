@@ -24,17 +24,17 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-    - ALL
+      - ALL
   # readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
 
-resources: 
+resources:
   requests:
     cpu: "2000m"
-    memory: "4000Mi"
+    memory: "12000Mi"
   limits:
-    nvidia.com/gpu: "1"
+    nvidia.com/gpu: "2"
 
 nodeSelector: {}
 
@@ -47,11 +47,11 @@ env: []
 args:
   - --model_dir=s3://model-dir/forward-head-posture/keras-ckpt
 
-envFrom: 
+envFrom:
   - secretRef:
       name: storage-credential
 
-parallelTrialCount: 2
+parallelTrialCount: 1
 
 objective:
   type: minimize
@@ -71,7 +71,7 @@ parameters:
     parameterType: double
   - feasibleSpace:
       max: "0.002"
-      min: "0.0001"
+      min: "0.001"
     name: --learning_rate
     parameterType: double
   - feasibleSpace:

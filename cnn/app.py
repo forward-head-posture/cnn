@@ -50,11 +50,11 @@ def count_images(data_dir, pattern="**/*train*"):
 
 # pylint: disable=too-many-arguments
 def main(
-    batch_size=100,
+    batch_size=200,
     data_dir="s3://tfrecord/forward-head-posture",
     decay_rate=0.7,
     decay_steps=100,
-    epochs=10,
+    epochs=100,
     learning_rate=0.0001,
     model_dir=None,
     model_name="MobileNet",
@@ -63,8 +63,10 @@ def main(
     optimizer = get_optimizer(
         optimizer_name, learning_rate, decay_steps, decay_rate
     )
-    model = get_model(model_name)
-    compile_model(model, optimizer)
+    strategy = tf.distribute.MirroredStrategy()
+    with strategy.scope():
+        model = get_model(model_name)
+        compile_model(model, optimizer)
     callbacks = get_callbacks(model_dir)
 
     def get_input_fn(is_training):

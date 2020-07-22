@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.0.0-gpu-py3
+FROM tensorflow/tensorflow:2.2.0rc2-gpu-py3
 WORKDIR /app
 
 RUN pip install fire
